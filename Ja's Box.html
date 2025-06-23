@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ja's Box - Votre musique, votre monde</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        :root {
+            --primary: #1db954;
+            --primary-dark: #179e47;
+            --dark-bg: #121212;
+            --dark-card: #181818;
+            --dark-text: #b3b3b3;
+            --light-text: #ffffff;
+            --divider: #282828;
+            --accent: #1db954;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--dark-bg);
+            color: var(--light-text);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header */
+        header {
+            background: rgba(18, 18, 18, 0.95);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+            border-bottom: 1px solid var(--divider);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            color: var(--primary);
+            font-size: 24px;
+        }
+        
+        .logo h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), #1ed760);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .user-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .user-actions button {
+            background: none;
+            border: none;
+            color: var(--light-text);
+            font-size: 1.2rem;
+        }
+        
+        /* Main Content */
+        .page-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+        }
+        
+        /* Page common styles */
+        .page { display: none; flex-direction: column; height: 100%; }
+        .page.active { display: flex; }
+        
+        /* Home Page */
+        #home-page .search-container {
+            margin: 10px 0 20px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        #home-page .search-container input[type="text"] {
+            flex: 1;
+            padding: 12px 15px;
+            border-radius: 20px;
+            border: none;
+            background: var(--dark-card);
+            color: var(--light-text);
+            font-size: 1rem;
+        }
+        
+        #home-page .search-container button {
+            background: var(--primary);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--light-text);
+            font-size: 1rem;
+        }
+        
+        .songs-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        .songs-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px;
+        }
+        
+        .song-item {
+            background: var(--dark-card);
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .song-item:hover {
+            transform: translateY(-5px);
+            background: #282828;
+        }
+        
+        .song-item .title {
+            font-weight: 500;
+            margin-bottom: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .song-item .artist {
+            font-size: 0.9rem;
+            color: var(--dark-text);
+            margin-bottom: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .song-item .duration {
+            font-size: 0.85rem;
+            color: var(--dark-text);
+        }
+        
+        /* Albums Section */
+        .albums-section {
+            margin-bottom: 25px;
+        }
+        
+        .albums-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        .albums-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px;
+        }
+        
+        .album-item {
+            background: var(--dark-card);
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .album-item:hover {
+            transform: translateY(-5px);
+            background: #282828;
+        }
+        
+        .album-image {
+            width: 100%;
+            aspect-ratio: 1/1;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        
+        .album-item .title {
+            font-weight: 500;
+            margin-bottom: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .album-item .artist {
+            font-size: 0.9rem;
+            color: var(--dark-text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* History Section */
+        .history-section {
+            margin-bottom: 25px;
+        }
+        
+        .history-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        .history-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+        }
+        
+        .history-item {
+            background: var(--dark-card);
+            padding: 12px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .history-item:hover {
+            transform: translateY(-5px);
+            background: #282828;
+        }
+        
+        .history-item .title {
+            font-size: 0.95rem;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 4px;
+        }
+        
+        .history-item .artist {
+            font-size: 0.8rem;
+            color: var(--dark-text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* Player Bar */
+        .player-bar {
+            background: rgba(30, 50, 30, 0.9);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid var(--divider);
+            position: sticky;
+            bottom: 0;
+            z-index: 100;
+        }
+        
+        .player-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .player-image {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(45deg, #1a2a6c, #b21f1f, #1db954);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        
+        .player-text {
+            min-width: 0;
+        }
+        
+        .player-title {
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 1rem;
+        }
+        
+        .player-artist {
+            color: var(--dark-text);
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .player-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .player-controls button {
+            background: none;
+            border: none;
+            color: var(--light-text);
+            font-size: 1.3rem;
+            cursor: pointer;
+        }
+        
+        .play-btn {
+            background: var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+        
+        .play-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+        
+        /* Bottom Navigation */
+        .bottom-nav {
+            background: rgba(18, 18, 18, 0.95);
+            border-top: 1px solid var(--divider);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            position: sticky;
+            bottom: 0;
+            z-index: 100;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--dark-text);
+            text-decoration: none;
+            font-size: 0.8rem;
+            gap: 5px;
+            flex: 1;
+        }
+        
+        .nav-item.active {
+            color: var(--light-text);
+        }
+        
+        .nav-item i {
+            font-size: 1.3rem;
+        }
+        
+        /* Library Page */
+        #library-page .page-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        #library-page .search-box {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+        }
+        
+        #library-page .search-box i {
+            color: var(--dark-text);
+            margin-right: 10px;
+        }
+        
+        #library-page .search-box input {
+            background: transparent;
+            border: none;
+            color: var(--light-text);
+            width: 100%;
+            font-size: 1rem;
+            outline: none;
+        }
+        
+        #library-page .category-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 15px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 1px solid var(--divider);
+        }
+        
+        #library-page .create-playlist-btn {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            transition: background 0.3s;
+            background: rgba(29, 185, 84, 0.1);
+            border: 1px dashed var(--primary);
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        
+        #library-page .create-playlist-btn:hover {
+            background: rgba(29, 185, 84, 0.2);
+        }
+        
+        #library-page .create-playlist-btn i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        #library-page .recent-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        #library-page .recent-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+        
+        #library-page .recent-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        #library-page .recent-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1db954);
+        }
+        
+        #library-page .recent-info {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        #library-page .recent-title {
+            font-weight: 500;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        #library-page .recent-subtitle {
+            color: var(--dark-text);
+            font-size: 0.85rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: var(--dark-card);
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            padding: 25px;
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: var(--light-text);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* Add Page - Albums */
+        .add-album-section {
+            margin-bottom: 25px;
+            background: var(--dark-card);
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .add-album-section h2 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .add-album-section h2 i {
+            font-size: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: var(--light-text);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 6px;
+            border: 1px solid var(--divider);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--light-text);
+            font-size: 1rem;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .file-input-label {
+            display: block;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--divider);
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .file-input-label:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .submit-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.3s;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .submit-btn:hover {
+            background: var(--primary-dark);
+        }
+        
+        /* Album selector */
+        .album-selector {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+            flex-wrap: wrap;
+        }
+        
+        .album-option {
+            background: rgba(29, 185, 84, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 15px;
+            padding: 5px 12px;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        
+        .album-option.selected {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* Responsive */
+        @media (max-width: 480px) {
+            .songs-list, .history-list, .albums-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            #library-page .recent-image {
+                width: 40px;
+                height: 40px;
+            }
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(20, 20, 40, 0.5);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Page d'accueil -->
+    <div id="home-page" class="page active">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <i class="fas fa-music"></i>
+                <h1>Ja's Box</h1>
+            </div>
+            <div class="user-actions">
+                <button><i class="fas fa-history"></i></button>
+                <button><i class="fas fa-user"></i></button>
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <div class="page-content">
+            <!-- Albums Section -->
+            <div class="albums-section" id="albums-section">
+                <h2>Vos Albums</h2>
+                <div class="albums-list" id="albums-list">
+                    <!-- Les albums ajoutés dynamiquement seront affichés ici -->
+                </div>
+            </div>
+            
+            <!-- Search and Songs List -->
+            <div class="songs-section">
+                <h2>Vos Sons</h2>
+                <div class="songs-actions">
+                    <div class="search-container">
+                        <input type="text" id="search-input" placeholder="Rechercher parmi vos sons...">
+                        <button id="search-btn"><i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+                <div class="songs-list" id="songs-list">
+                    <!-- Les sons ajoutés dynamiquement seront affichés ici -->
+                </div>
+            </div>
+            
+            <!-- History Section -->
+            <div class="history-section" id="history-section">
+                <h2>Historique des 8 derniers sons écoutés</h2>
+                <div class="history-list" id="history-list">
+                    <!-- Items dynamiques -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Player Bar -->
+        <div class="player-bar">
+            <div class="player-info">
+                <div class="player-image">
+                    <i class="fas fa-music"></i>
+                </div>
+                <div class="player-text">
+                    <div class="player-title">Aucun</div>
+                    <div class="player-artist"></div>
+                </div>
+            </div>
+            <div class="player-controls">
+                <button id="prev-btn"><i class="fas fa-step-backward"></i></button>
+                <button class="play-btn" id="play-btn"><i class="fas fa-play"></i></button>
+                <button id="next-btn"><i class="fas fa-step-forward"></i></button>
+            </div>
+            <audio id="audio-player"></audio>
+        </div>
+        
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <a href="#" class="nav-item active" data-page="home">
+                <i class="fas fa-home"></i>
+                <span>Accueil</span>
+            </a>
+            <a href="#" class="nav-item" data-page="library">
+                <i class="fas fa-book"></i>
+                <span>Bibliothèque</span>
+            </a>
+            <a href="#" class="nav-item" data-page="add">
+                <i class="fas fa-plus-circle"></i>
+                <span>Ajout</span>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Page de bibliothèque -->
+    <div id="library-page" class="page">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <i class="fas fa-book"></i>
+                <h1>Bibliothèque</h1>
+            </div>
+            <div class="user-actions">
+                <button><i class="fas fa-search"></i></button>
+                <button><i class="fas fa-sort-amount-down"></i></button>
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <div class="page-content">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="library-search" placeholder="Rechercher dans votre bibliothèque">
+            </div>
+            
+            <div class="category-title">Playlists</div>
+            
+            <div class="create-playlist-btn" id="create-playlist-btn">
+                <i class="fas fa-plus-circle"></i>
+                <div>Créer sa playlist</div>
+            </div>
+            
+            <div class="category-title">Albums</div>
+            <div class="recent-list" id="library-albums">
+                <!-- Les albums seront ajoutés ici dynamiquement -->
+            </div>
+            
+            <div class="category-title">Récents</div>
+            <div class="recent-list" id="recent-playlists">
+                <!-- Les playlists récentes seront ajoutées ici dynamiquement -->
+            </div>
+        </div>
+        
+        <!-- Player Bar -->
+        <div class="player-bar">
+            <div class="player-info">
+                <div class="player-image">
+                    <i class="fas fa-music"></i>
+                </div>
+                <div class="player-text">
+                    <div class="player-title">Aucun</div>
+                    <div class="player-artist"></div>
+                </div>
+            </div>
+            <div class="player-controls">
+                <button id="prev-btn-lib"><i class="fas fa-step-backward"></i></button>
+                <button class="play-btn" id="play-btn-lib"><i class="fas fa-play"></i></button>
+                <button id="next-btn-lib"><i class="fas fa-step-forward"></i></button>
+            </div>
+            <audio id="audio-player-lib"></audio>
+        </div>
+        
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <a href="#" class="nav-item" data-page="home">
+                <i class="fas fa-home"></i>
+                <span>Accueil</span>
+            </a>
+            <a href="#" class="nav-item active" data-page="library">
+                <i class="fas fa-book"></i>
+                <span>Bibliothèque</span>
+            </a>
+            <a href="#" class="nav-item" data-page="add">
+                <i class="fas fa-plus-circle"></i>
+                <span>Ajout</span>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Page d'ajout -->
+    <div id="add-page" class="page">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <i class="fas fa-plus-circle"></i>
+                <h1>Ajouter un son ou un album</h1>
+            </div>
+        </header>
+        
+        <div class="page-content">
+            <!-- Création d'album -->
+            <div class="add-album-section">
+                <h2><i class="fas fa-compact-disc"></i> Créer un nouvel album</h2>
+                <form id="create-album-form">
+                    <div class="form-group">
+                        <label for="album-name">Titre de l'album *</label>
+                        <input type="text" id="album-name" class="form-control" placeholder="Nom de l'album" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="album-artist">Artiste</label>
+                        <input type="text" id="album-artist" class="form-control" placeholder="Artiste principal">
+                    </div>
+                    <div class="form-group">
+                        <label for="album-image">Image de couverture</label>
+                        <input type="file" id="album-image" class="file-input" accept="image/*">
+                        <label for="album-image" class="file-input-label">
+                            <i class="fas fa-image"></i> Sélectionnez une image
+                        </label>
+                    </div>
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-plus-circle"></i> Créer l'album
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Ajout de son -->
+            <div class="add-sound-section">
+                <h2><i class="fas fa-music"></i> Ajouter un son</h2>
+                <form id="add-sound-form-page">
+                    <div class="form-group">
+                        <label for="sound-name">Titre du son *</label>
+                        <input type="text" id="sound-name" class="form-control" placeholder="Nom du son" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="sound-artist">Artiste</label>
+                        <input type="text" id="sound-artist" class="form-control" placeholder="Nom de l'artiste">
+                    </div>
+                    <div class="form-group">
+                        <label>Album</label>
+                        <div class="album-selector" id="album-selector">
+                            <!-- Les albums seront ajoutés ici dynamiquement -->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="sound-file">Fichier audio *</label>
+                        <input type="file" id="sound-file" class="file-input" accept="audio/*" required>
+                        <label for="sound-file" class="file-input-label">
+                            <i class="fas fa-upload"></i> Sélectionnez un fichier audio
+                        </label>
+                    </div>
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-plus-circle"></i> Ajouter le son
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <a href="#" class="nav-item" data-page="home">
+                <i class="fas fa-home"></i>
+                <span>Accueil</span>
+            </a>
+            <a href="#" class="nav-item" data-page="library">
+                <i class="fas fa-book"></i>
+                <span>Bibliothèque</span>
+            </a>
+            <a href="#" class="nav-item active" data-page="add">
+                <i class="fas fa-plus-circle"></i>
+                <span>Ajout</span>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Modal pour créer une playlist -->
+    <div id="playlist-modal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <h2 style="margin-bottom: 20px;">Créer une nouvelle playlist</h2>
+            <form id="create-playlist-form">
+                <div class="form-group">
+                    <label for="playlist-name">Nom de la playlist *</label>
+                    <input type="text" id="playlist-name" class="form-control" placeholder="Nom de votre playlist" required>
+                </div>
+                <div class="form-group">
+                    <label for="playlist-image">Image de la playlist</label>
+                    <input type="file" id="playlist-image" class="file-input" accept="image/*">
+                    <label for="playlist-image" class="file-input-label">
+                        <i class="fas fa-image"></i> Sélectionnez une image
+                    </label>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-plus"></i> Créer la playlist
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal pour modifier la playlist -->
+    <div id="edit-playlist-modal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" id="close-edit-modal">&times;</button>
+            <h2 style="margin-bottom: 20px;">Modifier la playlist</h2>
+            <form id="edit-playlist-form">
+                <input type="hidden" id="edit-playlist-id">
+                <div class="form-group">
+                    <label for="edit-playlist-name">Nom de la playlist *</label>
+                    <input type="text" id="edit-playlist-name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-playlist-image">Image de couverture</label>
+                    <input type="file" id="edit-playlist-image" class="file-input" accept="image/*">
+                    <label for="edit-playlist-image" class="file-input-label">
+                        <i class="fas fa-image"></i> Modifier l’image
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label for="edit-playlist-songs">Ajouter des sons à la playlist</label>
+                    <div id="edit-playlist-songs-list" style="max-height: 200px; overflow-y: auto;"></div>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-save"></i> Sauvegarder les modifications
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Navigation entre les pages
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetPage = this.dataset.page;
+                    navItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                    document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+                    document.getElementById(`${targetPage}-page`).classList.add('active');
+                    if (targetPage === 'home') {
+                        renderSongs(); 
+                        renderHistory();
+                        renderAlbums();
+                    } else if (targetPage === 'library') {
+                        renderLibraryAlbums();
+                    } else if (targetPage === 'add') {
+                        renderAlbumSelector();
+                    }
+                });
+            });
+
+            // Données
+            let songs = [];
+            let history = [];
+            let albums = [];
+            let currentIndex = -1;
+            
+            // Charger les données depuis localStorage
+            function loadData() {
+                // Charger les sons
+                const storedSongs = localStorage.getItem('jabox_sounds');
+                if (storedSongs) {
+                    try { songs = JSON.parse(storedSongs); } catch (e) { songs = []; }
+                }
+                
+                // Charger l'historique
+                const hist = localStorage.getItem('jabox_history');
+                if (hist) {
+                    try { history = JSON.parse(hist); } catch (e) { history = []; }
+                }
+                
+                // Charger les albums
+                const storedAlbums = localStorage.getItem('jabox_albums');
+                if (storedAlbums) {
+                    try { albums = JSON.parse(storedAlbums); } catch (e) { albums = []; }
+                }
+            }
+            
+            // Sauvegarder les données dans localStorage
+            function saveSongs() { localStorage.setItem('jabox_sounds', JSON.stringify(songs)); }
+            function saveHistory() { localStorage.setItem('jabox_history', JSON.stringify(history)); }
+            function saveAlbums() { localStorage.setItem('jabox_albums', JSON.stringify(albums)); }
+
+            // Formater la durée
+            function formatDuration(seconds) {
+                const min = Math.floor(seconds / 60);
+                const sec = Math.floor(seconds % 60);
+                return `${min}:${sec < 10 ? '0' : ''}${sec}`;
+            }
+
+            // Afficher les sons
+            function renderSongs(filter = '') {
+                const songsListEl = document.getElementById('songs-list');
+                songsListEl.innerHTML = '';
+                
+                if (songs.length === 0) {
+                    const emptyMsg = document.createElement('div');
+                    emptyMsg.className = 'empty-message';
+                    emptyMsg.textContent = 'Aucun son ajouté. Ajoutez des fichiers audio pour commencer.';
+                    emptyMsg.style.padding = '20px'; 
+                    emptyMsg.style.textAlign = 'center'; 
+                    emptyMsg.style.color = 'var(--dark-text)';
+                    songsListEl.appendChild(emptyMsg);
+                    return;
+                }
+                
+                const filtered = songs.filter(s => 
+                    s.name.toLowerCase().includes(filter.toLowerCase()) || 
+                    (s.artist && s.artist.toLowerCase().includes(filter.toLowerCase()))
+                );
+                
+                if (filtered.length === 0) {
+                    const noResults = document.createElement('div');
+                    noResults.className = 'no-results';
+                    noResults.textContent = 'Aucun son trouvé. Essayez un autre terme de recherche.';
+                    noResults.style.padding = '20px'; 
+                    noResults.style.textAlign = 'center'; 
+                    noResults.style.color = 'var(--dark-text)';
+                    songsListEl.appendChild(noResults);
+                    return;
+                }
+                
+                filtered.forEach((song, index) => {
+                    const item = document.createElement('div'); 
+                    item.className = 'song-item';
+                    
+                    const title = document.createElement('div'); 
+                    title.className = 'title'; 
+                    title.textContent = song.name;
+                    
+                    const artist = document.createElement('div'); 
+                    artist.className = 'artist'; 
+                    artist.textContent = song.artist || 'Artiste inconnu';
+                    
+                    const duration = document.createElement('div'); 
+                    duration.className = 'duration'; 
+                    duration.textContent = formatDuration(song.duration || 0);
+                    
+                    item.appendChild(title); 
+                    item.appendChild(artist); 
+                    item.appendChild(duration);
+                    
+                    item.addEventListener('click', () => playSongByIndex(index));
+                    
+                    songsListEl.appendChild(item);
+                });
+            }
+
+            // Afficher l'historique
+            function renderHistory() {
+                const historyListEl = document.getElementById('history-list');
+                const historySection = document.getElementById('history-section');
+                historyListEl.innerHTML = '';
+                
+                if (history.length === 0) { 
+                    historySection.style.display = 'none'; 
+                    return; 
+                }
+                
+                historySection.style.display = 'block';
+                const last = history.slice(-8).reverse();
+                
+                last.forEach(itemData => {
+                    const item = document.createElement('div'); 
+                    item.className = 'history-item';
+                    
+                    const title = document.createElement('div'); 
+                    title.className = 'title'; 
+                    title.textContent = itemData.name;
+                    
+                    const artist = document.createElement('div'); 
+                    artist.className = 'artist'; 
+                    artist.textContent = itemData.artist || 'Artiste inconnu';
+                    
+                    item.appendChild(title); 
+                    item.appendChild(artist);
+                    
+                    item.addEventListener('click', () => playSongById(itemData.id));
+                    
+                    historyListEl.appendChild(item);
+                });
+            }
+            
+            // Ajouter à l'historique
+            function addToHistory(song) {
+                history = history.filter(h => h.id !== song.id);
+                history.push(song);
+                if (history.length > 50) history = history.slice(-50);
+                saveHistory(); 
+                renderHistory();
+            }
+            
+            // Jouer un son par son index
+            function playSongByIndex(idx) {
+                const song = songs[idx]; 
+                if (!song) return; 
+                currentIndex = idx; 
+                playSong(song);
+            }
+            
+            // Jouer un son par son ID
+            function playSongById(id) {
+                const idx = songs.findIndex(s => s.id === id); 
+                if (idx !== -1) playSongByIndex(idx);
+            }
+            
+            // Jouer un son
+            function playSong(song) {
+                const audioPlayer = document.getElementById('audio-player');
+                audioPlayer.src = song.dataUrl;
+                audioPlayer.play().then(() => {
+                    document.querySelector('#home-page .player-title').textContent = song.name;
+                    document.querySelector('#home-page .player-artist').textContent = song.artist || 'Artiste inconnu';
+                    document.querySelector('#play-btn i').classList.replace('fa-play', 'fa-pause');
+                    addToHistory(song);
+                }).catch(error => { 
+                    console.error("Erreur de lecture:", error); 
+                    alert(`Impossible de lire le son: ${error.message}`); 
+                });
+            }
+            
+            // Contrôles du lecteur
+            document.getElementById('play-btn').addEventListener('click', () => {
+                const audioPlayer = document.getElementById('audio-player'); 
+                if (!audioPlayer.src) return;
+                
+                if (audioPlayer.paused) {
+                    audioPlayer.play().then(() => 
+                        document.querySelector('#play-btn i').classList.replace('fa-play', 'fa-pause')
+                    ).catch(e => console.error(e));
+                } else { 
+                    audioPlayer.pause(); 
+                    document.querySelector('#play-btn i').classList.replace('fa-pause', 'fa-play'); 
+                }
+            });
+            
+            document.getElementById('prev-btn').addEventListener('click', () => { 
+                if (songs.length && currentIndex > 0) playSongByIndex(currentIndex - 1); 
+            });
+            
+            document.getElementById('next-btn').addEventListener('click', () => { 
+                if (songs.length && currentIndex < songs.length - 1) playSongByIndex(currentIndex + 1); 
+            });
+            
+            document.getElementById('audio-player').addEventListener('ended', () => { 
+                document.querySelector('#play-btn i').classList.replace('fa-pause','fa-play'); 
+                if (currentIndex < songs.length - 1) playSongByIndex(currentIndex + 1); 
+            });
+
+            // Recherche dans la page d'accueil
+            document.getElementById('search-btn').addEventListener('click', () => 
+                renderSongs(document.getElementById('search-input').value)
+            );
+            
+            document.getElementById('search-input').addEventListener('keypress', e => { 
+                if (e.key === 'Enter') renderSongs(document.getElementById('search-input').value); 
+            });
+
+            // Création d'album
+            document.getElementById('create-album-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const albumName = document.getElementById('album-name').value;
+                const albumArtist = document.getElementById('album-artist').value;
+                const albumImage = document.getElementById('album-image').files[0];
+                
+                if (!albumName) {
+                    alert("Veuillez saisir un nom pour l'album");
+                    return;
+                }
+                
+                const album = {
+                    id: Date.now(),
+                    name: albumName,
+                    artist: albumArtist,
+                    date: new Date().toISOString(),
+                    image: null
+                };
+                
+                if (albumImage) {
+                    const reader = new FileReader();
+                    reader.onload = function(evt) {
+                        album.image = evt.target.result;
+                        albums.push(album);
+                        saveAlbums();
+                        this.reset();
+                        alert(`L'album "${albumName}" a été créé avec succès !`);
+                        renderAlbums();
+                        renderAlbumSelector();
+                        renderLibraryAlbums();
+                    };
+                    reader.readAsDataURL(albumImage);
+                } else {
+                    albums.push(album);
+                    saveAlbums();
+                    this.reset();
+                    alert(`L'album "${albumName}" a été créé avec succès !`);
+                    renderAlbums();
+                    renderAlbumSelector();
+                    renderLibraryAlbums();
+                }
+            });
+            
+            // Afficher les albums dans la page d'accueil
+            function renderAlbums() {
+                const albumsListEl = document.getElementById('albums-list');
+                albumsListEl.innerHTML = '';
+                
+                if (albums.length === 0) {
+                    albumsListEl.innerHTML = '<div class="empty-message">Aucun album créé. Créez votre premier album !</div>';
+                    return;
+                }
+                
+                albums.forEach(album => {
+                    const albumItem = document.createElement('div');
+                    albumItem.className = 'album-item';
+                    albumItem.dataset.id = album.id;
+                    
+                    // Image de l'album
+                    let imageHTML = '';
+                    if (album.image) {
+                        imageHTML = `<div class="album-image" style="background-image:url('${album.image}'); background-size:cover;"></div>`;
+                    } else {
+                        imageHTML = `<div class="album-image" style="background:linear-gradient(45deg, #1a2a6c, #b21f1f, #1db954);">
+                            <i class="fas fa-compact-disc"></i>
+                        </div>`;
+                    }
+                    
+                    albumItem.innerHTML = `
+                        ${imageHTML}
+                        <div class="title">${album.name}</div>
+                        <div class="artist">${album.artist || 'Artiste inconnu'}</div>
+                    `;
+                    
+                    // Jouer le premier son de l'album au clic
+                    albumItem.addEventListener('click', () => {
+                        const albumSongs = songs.filter(song => song.albumId === album.id);
+                        if (albumSongs.length > 0) {
+                            const firstSong = albumSongs[0];
+                            const songIndex = songs.findIndex(s => s.id === firstSong.id);
+                            if (songIndex !== -1) playSongByIndex(songIndex);
+                        }
+                    });
+                    
+                    albumsListEl.appendChild(albumItem);
+                });
+            }
+            
+            // Sélecteur d'album dans l'onglet "Ajout"
+            function renderAlbumSelector() {
+                const albumSelector = document.getElementById('album-selector');
+                albumSelector.innerHTML = '';
+                
+                // Option "Aucun album"
+                const noneOption = document.createElement('div');
+                noneOption.className = 'album-option selected';
+                noneOption.textContent = 'Aucun album';
+                noneOption.dataset.id = '';
+                noneOption.addEventListener('click', function() {
+                    document.querySelectorAll('.album-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                });
+                albumSelector.appendChild(noneOption);
+                
+                // Liste des albums
+                albums.forEach(album => {
+                    const albumOption = document.createElement('div');
+                    albumOption.className = 'album-option';
+                    albumOption.textContent = album.name;
+                    albumOption.dataset.id = album.id;
+                    
+                    albumOption.addEventListener('click', function() {
+                        document.querySelectorAll('.album-option').forEach(opt => {
+                            opt.classList.remove('selected');
+                        });
+                        this.classList.add('selected');
+                        
+                        // Pré-remplir l'artiste si l'album en a un
+                        if (album.artist) {
+                            document.getElementById('sound-artist').value = album.artist;
+                        }
+                    });
+                    
+                    albumSelector.appendChild(albumOption);
+                });
+            }
+            
+            // Ajout d'un son
+            document.getElementById('add-sound-form-page').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const soundName = document.getElementById('sound-name').value;
+                const soundArtist = document.getElementById('sound-artist').value;
+                const soundFile = document.getElementById('sound-file').files[0];
+                
+                // Trouver l'album sélectionné
+                const selectedAlbum = document.querySelector('.album-option.selected');
+                const albumId = selectedAlbum ? selectedAlbum.dataset.id : null;
+                
+                if (!soundFile) { 
+                    alert("Veuillez sélectionner un fichier audio"); 
+                    return; 
+                }
+                
+                if (!soundFile.type.startsWith('audio/')) { 
+                    alert("Le fichier sélectionné n'est pas un fichier audio valide"); 
+                    return; 
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    const dataUrl = evt.target.result;
+                    const audio = new Audio(dataUrl);
+                    const id = Date.now();
+                    
+                    audio.onloadedmetadata = () => {
+                        const sound = { 
+                            id, 
+                            name: soundName, 
+                            artist: soundArtist || "Artiste inconnu", 
+                            dataUrl: dataUrl, 
+                            albumId: albumId || null, 
+                            date: new Date().toISOString(), 
+                            duration: audio.duration 
+                        };
+                        
+                        songs.push(sound);
+                        saveSongs();
+                        this.reset();
+                        
+                        // Réinitialiser la sélection d'album
+                        document.querySelectorAll('.album-option').forEach(opt => {
+                            opt.classList.remove('selected');
+                        });
+                        document.querySelector('.album-option[data-id=""]').classList.add('selected');
+                        
+                        alert(`Le son "${soundName}" a été ajouté avec succès !`);
+                    };
+                };
+                reader.onerror = () => alert("Erreur lors de la lecture du fichier audio");
+                reader.readAsDataURL(soundFile);
+            });
+            
+            // Afficher les albums dans la bibliothèque
+            function renderLibraryAlbums() {
+                const libraryAlbumsEl = document.getElementById('library-albums');
+                libraryAlbumsEl.innerHTML = '';
+                
+                if (albums.length === 0) {
+                    libraryAlbumsEl.innerHTML = '<div style="color: var(--dark-text); text-align: center; padding: 10px;">Aucun album créé</div>';
+                    return;
+                }
+                
+                albums.forEach(album => {
+                    const albumItem = document.createElement('div');
+                    albumItem.className = 'recent-item';
+                    
+                    // Image de l'album
+                    let imageHTML = '';
+                    if (album.image) {
+                        imageHTML = `background-image:url('${album.image}'); background-size:cover;`;
+                    } else {
+                        imageHTML = 'background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1db954);';
+                    }
+                    
+                    albumItem.innerHTML = `
+                        <div class="recent-image" style="${imageHTML}">
+                            ${album.image ? '' : '<i class="fas fa-compact-disc"></i>'}
+                        </div>
+                        <div class="recent-info">
+                            <div>
+                                <div class="recent-title">${album.name}</div>
+                                <div class="recent-subtitle">${album.artist || 'Album'}</div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Jouer le premier son de l'album au clic
+                    albumItem.addEventListener('click', () => {
+                        const albumSongs = songs.filter(song => song.albumId === album.id);
+                        if (albumSongs.length > 0) {
+                            const firstSong = albumSongs[0];
+                            const songIndex = songs.findIndex(s => s.id === firstSong.id);
+                            if (songIndex !== -1) playSongByIndex(songIndex);
+                        }
+                    });
+                    
+                    libraryAlbumsEl.appendChild(albumItem);
+                });
+            }
+            
+            // Initialisation
+            loadData();
+            renderSongs();
+            renderHistory();
+            renderAlbums();
+            renderAlbumSelector();
+            renderLibraryAlbums();
+        });
+    </script>
+</body>
+</html>
